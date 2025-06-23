@@ -20,6 +20,7 @@ export const updateTask = async (req, res) => {
     newTaskOption,
     assignedUsers = [],
     attachments = [],
+    weeklyDays,
   } = req.body;
 
   try {
@@ -41,6 +42,7 @@ export const updateTask = async (req, res) => {
       .input('Reminder', sql.NVarChar, reminder)
       .input('Notes', sql.NVarChar, notes)
       .input('NewTaskOption', sql.NVarChar, newTaskOption)
+      .input('weeklyDays',sql.NVarChar, weeklyDays)
       .query(`
         UPDATE Tasks SET 
           Title = @Title,
@@ -55,7 +57,8 @@ export const updateTask = async (req, res) => {
           WeeklyInterval = @WeeklyInterval, -- ✅ new column
           Reminder = @Reminder,
           Notes = @Notes,
-          NewTaskOption = @NewTaskOption
+          NewTaskOption = @NewTaskOption,
+          weeklyDays=@weeklyDays
         WHERE ID = @ID
       `);
 
@@ -90,43 +93,47 @@ export const updateTask = async (req, res) => {
 export const getTaskById = async (req, res) => {
   const { id } = req.params;
   try {
-    
     const pool = await poolPromise;
 
-    const result = await pool.request()
-      .input('id', sql.Int, id)
-      .query(`SELECT * FROM Tasks WHERE ID = @id`);
+    // Fetch task details
+    const taskResult = await pool.request()
+      .input('TaskID', sql.Int, id)
+      .query('SELECT * FROM Tasks WHERE ID = @TaskID');
 
-    if (result.recordset.length === 0) {
+    if (taskResult.recordset.length === 0) {
       return res.status(404).json({ message: 'Task not found' });
     }
 
-    const task = result.recordset[0];
+    const task = taskResult.recordset[0];
 
-    // Optional: Fetch assigned users
-    const assignedUsers = await pool.request()
+    // Fetch attachments
+    const attachmentResult = await pool.request()
       .input('TaskID', sql.Int, id)
-      .query(`SELECT UserID FROM TaskAssignments WHERE TaskID = @TaskID`);
+      .query('SELECT ID, Title, FileName FROM Attachments WHERE TaskID = @TaskID');
 
-    task.assignedUsers = assignedUsers.recordset.map(row => row.UserID);
-
-    // Optional: Fetch attachments
-    const attachments = await pool.request()
+    // Fetch assigned users
+    const assignmentResult = await pool.request()
       .input('TaskID', sql.Int, id)
-      .query(`SELECT Title, FileName FROM Attachments WHERE TaskID = @TaskID`);
+      .query(`
+        SELECT TaskAssignments.UserID, Employees.FullName
+        FROM TaskAssignments
+        JOIN Employees ON TaskAssignments.UserID = Employees.ID
+        WHERE TaskAssignments.TaskID = @TaskID
+      `);
 
-    task.attachments = attachments.recordset.map(row => ({
-      title: row.Title,
-      file: { name: row.FileName }
-    }));
+    const fullTask = {
+      ...task,
+      Attachments: attachmentResult.recordset,
+      AssignedUsers: assignmentResult.recordset,
+    };
 
-    res.status(200).json(task);
-
-  } catch (err) {
-    console.error('Error fetching task by ID:', err);
-    res.status(500).json({ message: 'Server error while fetching task' });
+    res.json(fullTask);
+  } catch (error) {
+    console.error('Error fetching task by ID:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 export const getAllTasks = async (req, res) => {
   try {
