@@ -1,0 +1,40 @@
+/* AppNavbar.css */
+
+.navbar {
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7); */
+  font-family: 'Montserrat';
+  /* border-radius: 40px; */
+  /* background-color:#86a1bb8b */
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.8rem;
+  letter-spacing: 1px;
+  color: #000000 !important; /* teal-ish brand color */
+}
+
+.navbar-brand:hover {
+  color:#2972a6 !important;
+  text-decoration: none;
+}
+
+.nav-link {
+  font-size: 1.1rem;
+  margin-left: 15px;
+  color: black!important;
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #2972a6 !important;
+  text-decoration: underline;
+}
+
+.navbar-toggler {
+  border-color: #00bcd4;
+}
+
+.navbar-toggler-icon {
+  filter: invert(1);
+}

@@ -1,0 +1,78 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap');
+
+/* Root font */
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* Main layout container for sidebar + content */
+.tasklist-container {
+  display: flex;
+  min-height: calc(100vh - 64px);
+  gap: 20px;
+  box-sizing: border-box;
+  background-color: #f0f4f8;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 280px;
+  color: #86a1bb8b;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  margin-top: 20px;
+  height: fit-content;
+}
+
+/* Main content area */
+.tasklist-background {
+  flex-grow: 1;
+  background-color: #86a1bb8b;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  margin-left: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.04);
+}
+
+/* Page Title */
+.tasklist-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+/* Add Review Button */
+.tasklist-background .btn-primary {
+  font-size: 0.85rem;
+  padding: 6px 14px;
+  border-radius: 6px;
+}
+
+.add-task-btn {
+  width: 150px;
+}
+
+/* Table Styling */
+.tasklist-table {
+  background-color: #86a1bb8b;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.03);
+}
+
+/* Table Header */
+.tasklist-table thead {
+  background-color: #e8f0fe;
+  color: #333;
+  font-weight: 600;
+}
+
+/* Table Cells */
+.tasklist-table td,
+.tasklist-table th {
+  vertical-align: middle;
+  text-align: center;
+}

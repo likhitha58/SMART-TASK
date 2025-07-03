@@ -1,0 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap');
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+.locationlist-container {
+  display: flex;
+  min-height: calc(100vh - 64px);
+  gap: 20px;
+  box-sizing: border-box;
+  background-color: #f0f4f8;
+}
+
+.sidebar {
+  width: 280px;
+  color: #86a1bb8b;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  margin-top: 20px;
+  height: fit-content;
+}
+
+.locationlist-background {
+  flex-grow: 1;
+  background-color: #86a1bb8b;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+  margin-left: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.04);
+}
+
+.locationlist-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+.add-location-btn {
+  width: 150px;
+}
+
+.locationlist-table {
+  background-color: #ffffff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.03);
+}
+
+.locationlist-table thead {
+  background-color: #e8f0fe;
+  color: #333;
+  font-weight: 600;
+}

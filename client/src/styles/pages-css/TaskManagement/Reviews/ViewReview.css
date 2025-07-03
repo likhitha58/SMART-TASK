@@ -1,0 +1,56 @@
+.tasklist-container {
+  display: flex;
+  min-height: 100vh;
+  gap: 20px;
+  background-color: #f0f4f8;
+}
+.form-wrapper {
+  flex: 1;
+  padding: 30px;
+}
+.sidebar {
+  width: 280px;
+  padding: 10px;
+  margin-top: 20px;
+  border-radius: 12px;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+  height: fit-content;
+}
+
+.tasklist-background {
+  flex-grow: 1;
+  background-color: #86a1bb8b;
+  padding: 20px;
+  margin-top: 20px;
+  margin-left: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.04);
+}
+
+.tasklist-title {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 1rem;
+}
+
+
+.tasklist-title {
+  font-size: 1.7rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #2c3e50;
+}
+
+.card-header.bg-primary {
+  background-color: #007bff !important;
+}
+
+.card-header.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+.card-body img {
+  object-fit: cover;
+  border: 2px solid #ddd;
+}

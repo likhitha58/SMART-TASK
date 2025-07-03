@@ -1,0 +1,178 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Dosis:wght@200..800&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inspiration&family=Italiana&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+IN:wght@100..400&family=Poiret+One&family=Rubik:ital,wght@0,300..900;1,300..900&family=Sono:wght@200..800&display=swap');
+
+body {
+  background: linear-gradient( #ffffff, #2972a6b0);
+  /* min-height: 100vh; */
+  /* overflow-x: hidden;  */
+}
+
+.login-page-background {
+  min-height: 100vh;
+  background-image: linear-gradient(white, #2972a678);
+  background-size: cover;
+  background-repeat: no-repeat;
+  font-family: 'Montserrat', sans-serif;
+  
+}
+
+.custom-navbar {
+  background-color: transparent;
+  padding: 1rem 2rem;
+  box-shadow: none;
+  border-radius: 20px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #000;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.brand img {
+  height: 50px;
+  width: 50px;
+}
+
+.brand-name {
+  color: #000000;
+  font-weight: bold;
+  font-size: 2rem;
+}
+
+.trial-button {
+  background-color: #1b263b;
+  color: #fff;
+  border-radius: 20px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.trial-button:hover {
+  background-color: #415a77;
+}
+
+.login-wrapper {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 100px);
+  width: 100%;
+}
+
+.login-left,
+.login-right {
+  width: 50%;
+}
+
+.login-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.login-image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  mix-blend-mode: multiply;
+}
+
+.login-right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background-color: transparent; /* Removed glass background */
+  border-radius: 0; /* No extra styling */
+  box-shadow: none; /* No shadow */
+}
+
+
+
+.login-form-container {
+  padding: 4rem;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 550px;
+  backdrop-filter: blur(10px); /* Glass effect */
+  background: transparent;      /* Removed white background */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* Optional border for visibility */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);  
+  height:500px;/* Soft shadow */
+  align-items: center;
+  display:block;
+  justify-content: center;
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: bold;
+  font-size: 2rem;
+  color: #0d1b2a;
+  font-family: 'Montserrat', sans-serif;
+}
+form{
+  background-color: transparent;
+}
+
+.form-label {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.form-control {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #000;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 12px;
+  transition: 0.3s ease;
+}
+
+
+.form-control:focus {
+  outline: none;
+  border-color: #0d6efd;
+  box-shadow: 0 0 6px rgba(13, 110, 253, 0.4);
+  background-color:#b6cde3;
+}
+
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  font-weight: bold;
+  background-color: #0d6efd;
+  border: none;
+  border-radius: 8px;
+  transition: 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #084298;
+  transform: scale(1.02);
+}
+
+@media (max-width: 768px) {
+  .login-wrapper {
+    flex-direction: column;
+  }
+
+  .login-left,
+  .login-right {
+    width: 100%;
+  }
+
+  .login-image {
+    max-width: 300px;
+  }
+
+  .login-form-container {
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+}

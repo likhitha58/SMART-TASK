@@ -1,0 +1,42 @@
+.home-container {
+  background-color: #f0f4f8;
+  font-family: 'Montserrat', sans-serif;
+  padding: 1rem;
+  border-radius: 20px;
+}
+
+.home-title {
+  font-weight: 600;
+  color: #1b263b;
+}
+
+.home-subtext {
+  color: #4a4a4a;
+}
+
+/* Animated Card */
+.animated-card {
+  animation: fadeInUp 0.9s ease-in-out;
+  transition: transform 0.3s ease;
+  border-radius: 16px;
+  margin: 10px;
+  padding:20px;
+}
+
+.animated-card:hover {
+  transform: translateX(-2px);
+  /* box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15); */
+  background-color: #86a1bb24;
+  /* display: space-between 10px; */
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

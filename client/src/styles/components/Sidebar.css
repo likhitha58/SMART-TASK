@@ -1,0 +1,90 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Dosis:wght@200..800&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inspiration&family=Italiana&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+IN:wght@100..400&family=Poiret+One&family=Rubik:ital,wght@0,300..900;1,300..900&family=Sono:wght@200..800&display=swap');
+.sidebar-nav {
+  min-height: 88vh;
+  background-color: #86a1bb8b;
+  /* padding: 1rem; */
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  min-width:250px;
+  padding:10px; 
+  font-family:'montserrat'
+}
+
+.sidebar-link {
+  font-size: 1.1rem;
+  font-weight:800;
+  color: #343a40;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.375rem;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebar-link:hover,
+.sidebar-link:focus {
+  background-color: #86a1bb;
+  color: #fff !important;
+  text-decoration: none;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
+.sidebar-link.active {
+  background-color:#86a1bb8b;
+  color: #fff !important;
+  font-weight: 600;
+  pointer-events: none;
+}
+
+.sidebar-logo-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.sidebar-logo {
+  height: 150px;
+  width: 150px;
+  border-radius:50%;
+  object-fit: contain;
+}
+
+.sidebar-user-name-under-logo {
+  color:black;
+  font-weight: bold;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+.sidebar-user-photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
+
+.sidebar-user-name-under-logo {
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+  color: #000000; /* or match your sidebar theme */
+}
+.sidebar-submenu {
+  margin-left: 10px;
+  padding-left: 10px;
+  border-left: 2px solid #f9f4f482;
+}
+.sidebar-link {
+  cursor: pointer;
+  padding: 8px 16px;
+  color: #333;
+}
+
+

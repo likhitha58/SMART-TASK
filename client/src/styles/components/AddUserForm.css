@@ -1,0 +1,69 @@
+/* Form wrapper padding already handled via className="p-3" */
+/* form {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+} */
+.p-3{
+  background-color: #f0f4f8;;
+}
+/* Labels */
+form .form-label {
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+/* Inputs and selects */
+form .form-control,
+form .form-select {
+  border-radius: 10px;
+  padding: 10px;
+  border: 1px solid #dce3ea;
+  transition: border-color 0.2s ease;
+  font-size: 0.95rem;
+}
+
+form .form-control:focus,
+form .form-select:focus {
+  border-color: #6c9bcf;
+  box-shadow: 0 0 0 0.15rem rgba(108, 155, 207, 0.25);
+}
+
+/* File input */
+form input[type="file"] {
+  padding: 8px;
+}
+
+/* Status Button */
+form .btn-success,
+form .btn-secondary {
+  min-width: 120px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+/* Submit + Cancel buttons */
+form .btn {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+}
+
+form .btn + .btn {
+  margin-left: 10px;
+}
+
+/* Responsive fix */
+@media (max-width: 576px) {
+  form .form-label {
+    text-align: left !important;
+  }
+
+  form .form-group {
+    flex-direction: column;
+  }
+
+  form .col-sm-9 {
+    width: 100%;
+  }
+}

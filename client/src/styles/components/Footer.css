@@ -1,0 +1,12 @@
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Dosis:wght@200..800&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inspiration&family=Italiana&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+IN:wght@100..400&family=Poiret+One&family=Rubik:ital,wght@0,300..900;1,300..900&family=Sono:wght@200..800&display=swap');
+.footer-link {
+  color: #000000 !important;
+}
+
+/* .footer-container {
+  background: #222;
+} */
+ .footer-container{
+    font-family: 'Montserrat';
+    font-size:20px;
+ }
