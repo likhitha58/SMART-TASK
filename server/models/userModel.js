@@ -10,14 +10,34 @@ export async function getUserByCredentials(username, password) {
       .request()
       .input('Username', sql.VarChar, username)
       .input('Password', sql.VarChar, password)
-      .query('SELECT * FROM Users WHERE Username = @Username AND Password = @Password');
+      .query(`
+        SELECT 
+          ID,
+          Username,
+          FullName,
+          Photo
+        FROM Users
+        WHERE Username = @Username AND Password = @Password
+      `);
 
-    return result.recordset[0]; // Return first match (if any)
+    const user = result.recordset[0];
+
+    if (!user) return null;
+
+    // Ensure exact field naming used in token
+    return {
+      ID: user.ID,
+      Username: user.Username,
+      FullName: user.FullName, // ✅ full name
+      Photo: user.Photo         // ✅ filename like "profile.jpg"
+    };
+
   } catch (error) {
     console.error('Error fetching user:', error);
     throw error;
   }
 }
+
 
 // Function to add a new user
 export async function addUser(name, email, username, password) {

@@ -38,7 +38,7 @@ router.post('/', upload.single('photo'), async (req, res) => {
       .input('Status', sql.VarChar, status)
       .input('Photo', sql.VarChar, photo)
       .query(`
-        INSERT INTO Employees (FullName, Email, Username, Password, Mobile, Department, Role, Status, Photo)
+        INSERT INTO Users (FullName, Email, Username, Password, Mobile, Department, Role, Status, Photo)
         VALUES (@FullName, @Email, @Username, @Password, @Mobile, @Department, @Role, @Status, @Photo)
       `);
 
@@ -53,10 +53,10 @@ router.post('/', upload.single('photo'), async (req, res) => {
 router.get('/', async (req, res) => {
   try {
     const pool = await sql.connect(dbConfig);
-    const result = await pool.request().query('SELECT * FROM Employees');
+    const result = await pool.request().query('SELECT * FROM Users');
     res.status(200).json(result.recordset);
   } catch (err) {
-    console.error('Error fetching employees:', err);
+    console.error('Error fetching users:', err);
     res.status(500).json({ error: 'Server error' });
   }
 });
@@ -75,7 +75,7 @@ router.put('/update/:id', upload.single('photo'), async (req, res) => {
     password
   } = req.body;
 
-  const photoPath = req.file ? req.file.filename : null;
+  const photo = req.file ? req.file.filename : null;
 
   try {
     const pool = await sql.connect(dbConfig);
@@ -90,9 +90,9 @@ router.put('/update/:id', upload.single('photo'), async (req, res) => {
       .input('role', sql.VarChar, role)
       .input('status', sql.VarChar, status)
       .input('password', sql.VarChar, password)
-      .input('photo', sql.VarChar, photoPath)
+      .input('photo', sql.VarChar, photo)
       .query(`
-        UPDATE Employees
+        UPDATE Users
         SET
           FullName = @fullname,
           Email = @email,
@@ -120,7 +120,7 @@ router.get('/:id', async (req, res) => {
     const pool = await sql.connect(dbConfig);
     const result = await pool.request()
       .input('id', sql.Int, id)
-      .query('SELECT * FROM Employees WHERE Id = @id');
+      .query('SELECT * FROM Users WHERE Id = @id');
 
     if (result.recordset.length === 0) {
       return res.status(404).json({ message: 'User not found' });
@@ -136,7 +136,9 @@ router.get('/:id', async (req, res) => {
       department: user.Department,
       role: user.Role,
       status: user.Status,
+      photo: user.Photo, // ✅ Add this line
     });
+
 
   } catch (err) {
     console.error('Error fetching user:', err);
