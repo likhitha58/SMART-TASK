@@ -1,0 +1,70 @@
+/* Glassmorphic Toast Base */
+.custom-toast {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-radius: 18px !important;
+  padding: 18px 22px !important;
+  color: #fff;
+  font-family: 'Segoe UI', 'Roboto', sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1); /* fallback for unsupported */
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Glowing abstract shape */
+.custom-toast::before {
+  content: "";
+  position: absolute;
+  top: -30px;
+  left: -30px;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.08), transparent 70%);
+  border-radius: 50%;
+  z-index: 0;
+  filter: blur(3px);
+}
+
+.custom-toast-body {
+  position: relative;
+  z-index: 1;
+  line-height: 1.5;
+}
+
+/* Close button */
+.Toastify__close-button {
+  color: white;
+  font-size: 20px;
+  opacity: 0.75;
+  z-index: 2;
+  transition: opacity 0.2s ease;
+}
+
+.Toastify__close-button:hover {
+  opacity: 1;
+}
+
+/* Toast Types with subtle gradients over glass */
+.Toastify__toast--success {
+  background: linear-gradient(135deg, rgba(26, 188, 156, 0.3), rgba(22, 160, 133, 0.3));
+}
+
+.Toastify__toast--error {
+  background: linear-gradient(135deg, rgba(231, 76, 60, 0.3), rgba(192, 57, 43, 0.3));
+}
+
+.Toastify__toast--info {
+  background: linear-gradient(135deg, rgba(52, 152, 219, 0.3), rgba(41, 128, 185, 0.3));
+}
+
+.Toastify__toast--warning {
+  background: linear-gradient(135deg, rgba(243, 156, 18, 0.3), rgba(230, 126, 34, 0.3));
+}

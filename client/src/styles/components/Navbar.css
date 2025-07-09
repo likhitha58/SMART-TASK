@@ -1,28 +1,32 @@
-/* AppNavbar.css */
-
-.navbar {
-  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7); */
-  font-family: 'Montserrat';
-  /* border-radius: 40px; */
-  /* background-color:#86a1bb8b */
+/* Navbar Layout Styling */
+.custom-navbar {
+  background-color:rgba(255, 255, 255, 0.155);
+  padding: 0.6rem 1rem;
+  /* border-bottom: 1px solid #dee2e6; */
+  font-family: 'Montserrat', sans-serif;
+  z-index: 1000;
+  position: sticky;
+  top: 0;
+  border-radius:0px !important;
 }
 
-.navbar-brand {
+/* Brand Title */
+.navbar-title {
   font-weight: 700;
-  font-size: 1.8rem;
-  letter-spacing: 1px;
-  color: #000000 !important; /* teal-ish brand color */
+  font-size: 1.6rem;
+  color: #000 !important;
 }
 
-.navbar-brand:hover {
-  color:#2972a6 !important;
+.navbar-title:hover {
+  color: #2972a6 !important;
   text-decoration: none;
 }
 
+/* Nav Links Styling */
 .nav-link {
   font-size: 1.1rem;
-  margin-left: 15px;
-  color: black!important;
+  margin-left: 20px;
+  color: #000 !important;
   transition: color 0.3s ease;
 }
 
@@ -31,8 +35,9 @@
   text-decoration: underline;
 }
 
+/* Toggler Icon */
 .navbar-toggler {
-  border-color: #00bcd4;
+  border: none;
 }
 
 .navbar-toggler-icon {

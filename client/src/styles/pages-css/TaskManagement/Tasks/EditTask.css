@@ -2,9 +2,14 @@
   display: flex;
   gap: 20px;
   min-height: calc(100vh - 64px); /* Adjust for Navbar height */
-  /* padding: 20px; */
-  background-color: #f0f4f8;
+  padding: 20px;
+  background: rgba(134, 161, 187, 0.25); /* semi-transparent bluish */
   box-sizing: border-box;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 /* Sidebar styling */

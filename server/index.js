@@ -8,14 +8,15 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import chatbotRoutes from './routes/chatbotRoutes.js';
-import reviewRoutes from './routes/reviewRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import taskRoutes from './routes/taskRoutes.js';
 import departmentRoutes from './routes/masters/departmentRoutes.js';
 import locationRoutes from './routes/masters/locationRoutes.js';
 import projectIdRoutes from './routes/masters/projectIdRoutes.js';
-
+import reviewRoutes from './routes/reviewRoutes.js';
+import taskHistoryRoutes from './routes/taskHistoryRoutes.js';
+import { poolPromise } from './config/db.js';
 dotenv.config();
 const app = express();
 app.use(express.json())
@@ -39,13 +40,17 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/masters/departments', departmentRoutes);
 app.use('/api/masters/locations', locationRoutes);
 app.use('/api/masters/project-ids', projectIdRoutes);
+
+
+app.use('/api/reviews', reviewRoutes);
 // Optional base route
 app.get('/', (req, res) => {
   res.send('Smart Task backend is running...');
 });
 
+app.use('/api/task-history', taskHistoryRoutes);
+
 app.use('/api/chatbot', chatbotRoutes);
-app.use('/api/reviews', reviewRoutes);
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

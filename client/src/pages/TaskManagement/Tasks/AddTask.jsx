@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Form, Button, Container, Row, Col, Table } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 // import axiosInstance from '../../../api/axiosConfig.js';
 import { MdOutlineTaskAlt } from 'react-icons/md'; // ⬅️ Add this import at the top
 import { HiPaperClip } from 'react-icons/hi';
@@ -12,6 +14,8 @@ import Sidebar from '../../../components/Sidebar.jsx';
 import Footer from '../../../components/Footer.jsx';
 import '../../../styles/pages-css/TaskManagement/Tasks/AddTask.css';
 import DatePicker from 'react-datepicker';
+import { FaStickyNote} from 'react-icons/fa';
+
 import 'react-datepicker/dist/react-datepicker.css';
 
 
@@ -108,7 +112,7 @@ const AddTask = () => {
         attachmentFile: null,
       });
     } else {
-      alert('Please provide both a title and a file.');
+      toast.warning('Please provide both title and file for the attachment.');
     }
   };
 
@@ -179,80 +183,68 @@ const AddTask = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    // ✅ Create new FormData instance (DON’T confuse with state `formData`)
-    const summary = generateRecurrenceSummary();
-    console.log('🔍 Recurrence Summary:', summary, typeof summary);
-    const payload = new FormData();
-    const newTaskOptionValue = parseInt(formData.newTaskOption);
-    payload.append('recurrenceSummary', summary); // ✅ Add this line before making the POST request
+  const summary = generateRecurrenceSummary();
+  const payload = new FormData();
+  const newTaskOptionValue = parseInt(formData.newTaskOption);
+  payload.append('recurrenceSummary', summary);
+  payload.append('title', formData.title || '');
+  payload.append('department', formData.department);
+  payload.append('subject', formData.subject || '');
+  payload.append('projectId', formData.projectId);
+  payload.append('location', formData.location);
+  payload.append('priority', formData.priority || '');
+  payload.append(
+    'dueDate',
+    formData.dueDate ? new Date(formData.dueDate).toISOString().split('T')[0] : ''
+  );
+  payload.append(
+    'endDate',
+    formData.endDate ? new Date(formData.endDate).toISOString().split('T')[0] : ''
+  );
+  payload.append('recurrence', formData.recurrence || '');
+  payload.append('reminder', formData.reminder || '');
+  payload.append('notes', formData.notes || '');
+  payload.append('newTaskOption', isNaN(newTaskOptionValue) ? 0 : newTaskOptionValue);
+  payload.append('weeklyInterval', formData.weeklyInterval || 1);
+  payload.append('monthlyInterval', formData.monthlyInterval || 1);
+  payload.append('yearlyInterval', formData.yearlyInterval || 1);
+  payload.append('weeklyDays', JSON.stringify(formData.weeklyDays || []));
 
-    // Append primitive fields
-    payload.append('title', formData.title || '');
-    payload.append('department', formData.department);
-    payload.append('subject', formData.subject || '');
-    payload.append('projectId', formData.projectId);
-    payload.append('location', formData.location);
-    payload.append('priority', formData.priority || '');
-    payload.append('dueDate', formData.dueDate ? new Date(formData.dueDate).toISOString().split('T')[0] : '');
-    payload.append('endDate', formData.endDate ? new Date(formData.endDate).toISOString().split('T')[0] : '');
-    payload.append('recurrence', formData.recurrence || '');
-    payload.append('reminder', formData.reminder || '');
-    payload.append('notes', formData.notes || '');
-    payload.append('newTaskOption', isNaN(newTaskOptionValue) ? 0 : newTaskOptionValue);
+  (formData.assignedUsers || []).forEach((userId) => {
+    payload.append('assignedUsers', userId);
+  });
 
-    payload.append('recurrenceSummary', summary);
-    payload.append('weeklyInterval', formData.weeklyInterval || 1);
-    payload.append('monthlyInterval', formData.monthlyInterval || 1);
-    payload.append('yearlyInterval', formData.yearlyInterval || 1);
-    // 👈 ADD THIS LINE
-
-
-    // ✅ Weekly Days (send as JSON string)
-    payload.append('weeklyDays', JSON.stringify(formData.weeklyDays || []));
-
-    // ✅ Assigned Users
-    (formData.assignedUsers || []).forEach((userId) => {
-      payload.append('assignedUsers', userId);
-    });
-
-    // ✅ Attachments
-    (formData.attachments || []).forEach((att) => {
-      if (att?.file) {
-        payload.append('attachments', att.file);
-        payload.append('attachmentTitles', att.title || att.file.name);
-      }
-    });
-
-    try {
-      for (let pair of payload.entries()) {
-        console.log('📦 FormData:', pair[0], '=', pair[1]);
-      }
-
-      const token = localStorage.getItem('token');
-
-      const res = await axios.post('http://localhost:5000/api/tasks/add-task', payload, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: `Bearer ${token}`, // ✅ Add this line
-        },
-      });
-
-      alert('✅ Task added successfully:', res.data);
-      console.log("Recurrence Summary:", summary);
-      // Optional: reset form or show success message
-    } catch (error) {
-      console.error('❌ Error adding task:', error);
-      if (error.response) {
-        console.error('🔴 Server response:', error.response.data);
-        alert('❌ ' + (error.response.data.message || 'Unknown server error'));
-      } else {
-        alert('❌ Error adding task. Check console for more info.');
-      }
+  (formData.attachments || []).forEach((att) => {
+    if (att?.file) {
+      payload.append('attachments', att.file);
+      payload.append('attachmentTitles', att.title || att.file.name);
     }
+  });
 
-  };
+  try {
+    const token = localStorage.getItem('token');
+    const res = await axios.post('http://localhost:5000/api/tasks/add-task', payload, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    toast.success('Task added successfully!');
+    console.log("Recurrence Summary:", summary);
+    // Optional: reset form or navigate
+  } catch (error) {
+    console.error('Error adding task:', error);
+    if (error.response) {
+      toast.error(error.response.data.message || 'Unknown server error.');
+    } else {
+      toast.error('Error adding task. Check console for more info.');
+    }
+  }
+};
+
 
 
 
@@ -373,9 +365,9 @@ const AddTask = () => {
     <>
       <AppNavbar />
       <div className="addtask-container">
-        <div className="sidebar">
+        {/* <div className="sidebar"> */}
           <Sidebar />
-        </div>
+        {/* </div> */}
         <div className="form-wrapper">
           <h2 style={{ textAlign: 'left', fontWeight: 600, color: '#2c3e50', fontSize: 28 }}>Add New Task</h2>
           <Container className="addtask-content">
@@ -416,7 +408,7 @@ const AddTask = () => {
                       >
                         <option value="">-- Select Department --</option>
                         {Array.isArray(departments) && departments.map((dept) => (
-                          <option key={dept.ID} value={dept.ID}>
+                          <option key={dept.ID} value={dept.DepartmentName}>
                             {dept.DepartmentName}
                           </option>
                         ))}
@@ -437,7 +429,7 @@ const AddTask = () => {
                       >
                         <option value="">-- Select Project ID --</option>
                         {Array.isArray(projectIds) && projectIds.map((proj) => (
-                          <option key={proj.ID} value={proj.ID}>
+                          <option key={proj.ID} value={proj.ProjectID}>
                             {proj.ProjectID} - {proj.PracticeArea}
                           </option>
                         ))}
@@ -456,7 +448,7 @@ const AddTask = () => {
                       >
                         <option value="">-- Select Location --</option>
                         {Array.isArray(locations) && locations.map((loc) => (
-                          <option key={loc.ID} value={loc.ID}>
+                          <option key={loc.ID} value={loc.LocationName}>
                             {loc.LocationName}
                           </option>
                         ))}
@@ -885,7 +877,7 @@ const AddTask = () => {
               {/* === Container 5: Task Notes & Options === */}
               <div className="mb-4 p-4 rounded" style={{ backgroundColor: '#f4f9f9' }}>
                 <h5 style={{ fontWeight: 600, color: '#2c3e50' }}>
-                  <MdOutlineTaskAlt style={{ marginRight: '8px', fontSize: '1.3rem', verticalAlign: 'middle' }} />
+                  <FaStickyNote className="me-2" />
                   Task Notes & Options
                 </h5>
 

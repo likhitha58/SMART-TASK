@@ -7,11 +7,16 @@ const instance = axios.create({
 
 // Automatically add token to every request
 instance.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token'); // ✅ Must exist after login
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  if (!config.headers['skipAuth']) {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+  } else {
+    delete config.headers['skipAuth']; // Clean it up
   }
   return config;
 });
+
 
 export default instance;

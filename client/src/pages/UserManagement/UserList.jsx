@@ -29,9 +29,9 @@ const UserList = () => {
     <>
       <AppNavbar />
       <div className="userlist-container">
-        <div className="sidebar">
-          <Sidebar />
-        </div>
+        {/* <div className="sidebar"> */}
+          <Sidebar style={{padding:30}}/>
+        {/* </div> */}
 
         <div className="userlist-background">
           <Container>

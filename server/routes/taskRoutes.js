@@ -1,9 +1,8 @@
 import express from 'express';
 import { poolPromise, sql } from '../config/db.js'; // make sure db.js exports correctly
-import { updateTask, getTaskById,  addTask, getUserTasks, getAllTasks } from '../controllers/taskController.js';
+import { updateTask, getTaskById,  addTask, getUserTasks, getAllTasks, uploadAttachment } from '../controllers/taskController.js';
 import multer from 'multer';
-import { authenticateUser } from '../middleware/authMiddleware.js';
-import { verifyToken } from '../middleware/authMiddleware.js';
+import { authenticateUser, verifyToken } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
@@ -23,6 +22,12 @@ router.get('/:id', authenticateUser, getTaskById);
 router.put('/:id', authenticateUser, upload.array('attachments'),updateTask);
 router.post('/add-task', authenticateUser, upload.array('attachments'), addTask);
 router.get('/tasks', authenticateUser, getAllTasks);
+router.post(
+  '/attachments/upload',
+  authenticateUser,
+  upload.single('file'),
+  uploadAttachment
+);
 
 router.delete('/attachment/:id',authenticateUser, async (req, res) => {
   const attachmentId = req.params.id;
@@ -39,8 +44,5 @@ router.delete('/attachment/:id',authenticateUser, async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 });
-// router.get('/:id', verifyToken, getTaskById);
-// router.put('/:id', verifyToken, updateTask);
-// router.post('/add-task', verifyToken, upload.array('attachments'), addTask);
 
 export default router;

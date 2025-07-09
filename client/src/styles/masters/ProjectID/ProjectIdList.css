@@ -9,7 +9,8 @@ body {
   min-height: calc(100vh - 64px);
   gap: 20px;
   box-sizing: border-box;
-  background-color: #f0f4f8;
+  /* background-color: #f0f4f8; */
+  padding:20px;
 }
 
 .sidebar {

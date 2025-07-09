@@ -44,9 +44,9 @@ const LocationList = () => {
     <>
       <AppNavbar />
       <div className="locationlist-container">
-        <div className="sidebar">
+        {/* <div className="sidebar"> */}
           <Sidebar />
-        </div>
+        {/* </div> */}
 
         <div className="locationlist-background">
           <Container fluid>

@@ -46,9 +46,9 @@ const DepartmentList = () => {
     <>
       <AppNavbar />
       <div className="departmentlist-container">
-        <div className="sidebar">
+        {/* <div className="sidebar"> */}
           <Sidebar />
-        </div>
+        {/* </div> */}
 
         <div className="departmentlist-background">
           <Container fluid>

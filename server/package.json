@@ -19,7 +19,8 @@
     "jsonwebtoken": "^9.0.2",
     "mssql": "^11.0.1",
     "multer": "^2.0.1",
-    "react-datepicker": "^8.4.0"
+    "react-datepicker": "^8.4.0",
+    "react-toastify": "^11.0.5"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

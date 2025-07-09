@@ -2,7 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import axios from '../../../api/axiosConfig'; // ✅ uses baseURL = 'http://localhost:5000/api'
 import AppNavbar from '../../../components/Navbar.jsx';
 import Footer from '../../../components/Footer.jsx';
 import Sidebar from '../../../components/Sidebar.jsx';
@@ -33,7 +35,7 @@ const ViewTask = () => {
             try {
                 const token = localStorage.getItem('token');
 
-                const response = await axios.get(`/api/tasks/${id}`, {
+                const response = await axios.get(`/tasks/${id}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
 
@@ -101,7 +103,7 @@ const ViewTask = () => {
             formDataToSend.append('newTaskOption', task.NewTaskOption || '');
             formDataToSend.append('weeklyDays', JSON.stringify(task.WeeklyDays || []));
             formDataToSend.append('recurrenceSummary', task.RecurrenceSummary || '');
-            formDataToSend.append('assignedUsers', JSON.stringify(task.AssignedUsers?.map((u) => u.UserID) || []));
+            formDataToSend.append('assignedUsers', JSON.stringify(task.AssignedUsers?.map((u) => Number(u.UserID)) || []));
 
 
             // Attachments
@@ -111,15 +113,16 @@ const ViewTask = () => {
                     formDataToSend.append('attachmentTitles', attachmentTitles[index] || file.name);
                 }
             });
+// console.log('Sending data to update:', updatedTaskData);
 
-            await axios.put(`/api/tasks/${id}`, formDataToSend, {
+            await axios.put(`/tasks/${id}`, formDataToSend, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                     'Content-Type': 'multipart/form-data',
                 },
             });
 
-            const updatedTask = await axios.get(`/api/tasks/${id}`, {
+            const updatedTask = await axios.get(`/tasks/${id}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -136,10 +139,10 @@ const ViewTask = () => {
             setNewAttachments([]);
             setAttachmentTitles([]);
 
-            alert('Task updated successfully!');
+            toast.success('Task updated successfully!');
         } catch (error) {
             console.error('Error updating task:', error);
-            alert('Failed to update task');
+            toast.error('Failed to update task');
         }
     };
 
@@ -169,9 +172,9 @@ const ViewTask = () => {
         <>
             <AppNavbar />
             <div className="addtask-container">
-                <div className="sidebar">
+                {/* <div className="sidebar"> */}
                     <Sidebar />
-                </div>
+                {/* </div> */}
                 <div className="form-wrapper">
                     <h2 className="mb-4">View Task</h2>
                     <Container className="addtask-content">

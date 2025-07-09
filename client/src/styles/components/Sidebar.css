@@ -1,90 +1,98 @@
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Dosis:wght@200..800&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inspiration&family=Italiana&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+IN:wght@100..400&family=Poiret+One&family=Rubik:ital,wght@0,300..900;1,300..900&family=Sono:wght@200..800&display=swap');
-.sidebar-nav {
-  min-height: 88vh;
-  background-color: #86a1bb8b;
-  /* padding: 1rem; */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300..900&display=swap');
+
+.sidebar-wrapper {
+  width: 250px;
+  font-family: 'Montserrat', sans-serif;
+  /* z-index: 1000; */
+  background-color: transparent;
   display: flex;
   flex-direction: column;
-  border-radius: 20px;
-  min-width:250px;
-  padding:10px; 
-  font-family:'montserrat'
-}
-
-.sidebar-link {
-  font-size: 1.1rem;
-  font-weight:800;
-  color: #343a40;
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: 0.375rem;
-  transition: background-color 0.2s ease, color 0.2s ease;
   align-items: center;
-  justify-content: center;
+  margin-top: 20px; /* ✅ This adds spacing from the top */
 }
 
-.sidebar-link:hover,
-.sidebar-link:focus {
-  background-color: #86a1bb;
-  color: #fff !important;
-  text-decoration: none;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-}
 
-.sidebar-link.active {
-  background-color:#86a1bb8b;
-  color: #fff !important;
-  font-weight: 600;
-  pointer-events: none;
-}
-
+/* Profile section */
 .sidebar-logo-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem 0;
-}
-
-.sidebar-logo {
-  height: 150px;
-  width: 150px;
-  border-radius:50%;
-  object-fit: contain;
-}
-
-.sidebar-user-name-under-logo {
-  color:black;
-  font-weight: bold;
-  font-size: 1rem;
-  margin-top: 0.5rem;
+  width: 100%;
+  background-color: #fff;
+  border-radius: 20px;
+  padding: 20px 0;
   text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
 }
+
 .sidebar-user-photo {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #356592;
   margin-bottom: 10px;
 }
 
 .sidebar-user-name-under-logo {
-  font-weight: bold;
-  font-size: 16px;
-  text-align: center;
-  color: #000000; /* or match your sidebar theme */
+  font-weight: 700;
+  font-size: 1rem;
+  color: #000000;
 }
-.sidebar-submenu {
-  margin-left: 10px;
-  padding-left: 10px;
-  border-left: 2px solid #f9f4f482;
+
+/* Navigation section */
+.sidebar-nav {
+  width: 100%;
+  background-color: #528abe7e;
+  border-radius: 20px;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
+
+/* Main section links */
 .sidebar-link {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #2e2e2e;
+  padding: 10px 20px;
+  margin: 4px 0;
   cursor: pointer;
-  padding: 8px 16px;
-  color: #333;
+  border-radius: 0 20px 20px 0;
+  transition: all 0.2s ease-in-out;
 }
 
+.sidebar-link:hover {
+  background-color: #b4d1ecc7;
+  color: white;
+}
 
+/* Submenu */
+.sidebar-submenu {
+  padding-left: 30px;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.sidebar-sublink {
+  padding: 6px 0;
+  color: #333;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.sidebar-sublink:hover {
+  color: #ffffff;
+  text-decoration: underline;
+}
+
+/* Hover zone (optional) */
+.sidebar-hover-zone {
+  position: fixed;
+  left: 0;
+  top: 0;
+  height: 100vh;
+  width: 12px;
+  z-index: 999;
+}

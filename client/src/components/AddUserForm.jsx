@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import '../styles/components/AddUserForm.css';
+import { toast } from 'react-toastify';
 import axios from 'axios';
 
 const AddUserForm = ({ onSubmit, onCancel }) => {
@@ -27,7 +28,7 @@ const AddUserForm = ({ onSubmit, onCancel }) => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+      toast.error(' Passwords do not match!');
       return;
     }
 
@@ -54,18 +55,17 @@ const AddUserForm = ({ onSubmit, onCancel }) => {
           },
         }
       );
+      toast.success('User added successfully!');
       console.log('User added:', response.data);
       if (onSubmit) onSubmit(formData);
     } catch (error) {
       console.error('Error submitting user:', error);
-      alert('Error adding user. Please try again.');
+      toast.error(' Error adding user. Please try again!');
     }
   };
 
-
   return (
     <Form onSubmit={handleSubmit} encType="multipart/form-data" className="p-3">
-
       <Form.Group as={Row} className="mb-3" controlId="fullname">
         <Form.Label column sm={3}>Full Name</Form.Label>
         <Col sm={9}>
@@ -147,7 +147,6 @@ const AddUserForm = ({ onSubmit, onCancel }) => {
         </Col>
       </Form.Group>
 
-
       <Form.Group as={Row} className="mb-3" controlId="mobile">
         <Form.Label column sm={3}>Mobile Number</Form.Label>
         <Col sm={9}>
@@ -220,8 +219,6 @@ const AddUserForm = ({ onSubmit, onCancel }) => {
           )}
         </Col>
       </Form.Group>
-
-
 
       <Row className="mt-4">
         <Col sm={{ span: 9, offset: 3 }} className="d-flex gap-3">

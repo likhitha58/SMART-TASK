@@ -1,14 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Dosis:wght@200..800&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inspiration&family=Italiana&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+IN:wght@100..400&family=Poiret+One&family=Rubik:ital,wght@0,300..900;1,300..900&family=Sono:wght@200..800&display=swap');
 
 body {
-  background: linear-gradient( #ffffff, #2972a6b0);
-  /* min-height: 100vh; */
-  /* overflow-x: hidden;  */
+  background: linear-gradient(135deg, #E9EFF6, #D3E0EA, #B4CDE8, #779ECB, #415A77);
+  background-size: 200% 200%;
+  animation: gradientFlow 15s ease infinite;
+  font-family: 'Montserrat', sans-serif;
+}
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
 .login-page-background {
   min-height: 100vh;
-  background-image: linear-gradient(white, #2972a678);
+  /* background-image: linear-gradient(white, #2972a678); */
   background-size: cover;
   background-repeat: no-repeat;
   font-family: 'Montserrat', sans-serif;

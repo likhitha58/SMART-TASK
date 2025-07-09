@@ -1,31 +1,60 @@
 import express from 'express';
-import { addReview, getReviewsByTaskId, downloadReviewAttachment } from '../controllers/reviewController.js';
-import { authenticateUser } from '../middleware/authMiddleware.js';
+import {
+  getOwnCreatedTasks,
+  getReviewData,
+  saveReview,
+  uploadReviewAttachments
+} from '../controllers/reviewController.js';
+
+import { verifyToken } from '../middleware/authMiddleware.js';
 import multer from 'multer';
+import fs from 'fs';
 import path from 'path';
 
 const router = express.Router();
 
-// Setup Multer for review attachment uploads
+// ✅ Multer Storage Config
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/');
+  destination: (req, file, cb) => {
+    const uploadPath = 'uploads/';
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
+    }
+    cb(null, uploadPath);
   },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const baseName = path.basename(file.originalname, ext);
+    const uniqueName = `${Date.now()}-${baseName}${ext}`;
+    cb(null, uniqueName);
+  }
 });
 
 const upload = multer({ storage });
 
-// Add a review with attachments
-router.post('/add', authenticateUser, upload.array('attachments'), addReview);
+/* -------------------------- 📌 ROUTES START -------------------------- */
 
-// Get all reviews for a task
-router.get('/task/:taskId', authenticateUser, getReviewsByTaskId);
+// 🔹 1. Get all tasks created by current user
+// GET /api/reviews/own-created-tasks
+router.get('/own-created-tasks', verifyToken, getOwnCreatedTasks);
 
-// Download review attachment
-router.get('/attachment/:filename', authenticateUser, downloadReviewAttachment);
+// 🔹 2. Get task + creator + attachments (for review screen)
+// GET /api/reviews/:id/review-data
+router.get('/:id/review-data', verifyToken, getReviewData);
+
+// 🔹 3. Save review notes and status
+// PUT /api/reviews/:taskId/review-status
+router.put('/:taskId/review-status', verifyToken, saveReview);
+
+// 🔹 4. Upload attachments for review
+// POST /api/reviews/attachments/upload
+router.post(
+  '/attachments/upload',
+  verifyToken,
+  upload.array('attachments'),
+  uploadReviewAttachments
+);
+
+/* -------------------------- 📌 ROUTES END -------------------------- */
 
 export default router;

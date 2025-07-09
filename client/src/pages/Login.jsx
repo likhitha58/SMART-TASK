@@ -19,6 +19,8 @@ const Login = () => {
       const response = await axios.post('/auth/login', {
         username,
         password,
+      },{
+        headers:{skipAuth:true}
       });
 
       if (response.data.success) {

@@ -42,9 +42,9 @@ const ProjectIdList = () => {
     <>
       <AppNavbar />
       <div className="projectidlist-container">
-        <div className="sidebar">
+        {/* <div className="sidebar"> */}
           <Sidebar />
-        </div>
+        {/* </div> */}
 
         <div className="projectidlist-background">
           <Container fluid>

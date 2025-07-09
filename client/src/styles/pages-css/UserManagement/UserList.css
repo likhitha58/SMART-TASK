@@ -12,14 +12,14 @@ body {
 .userlist-container {
   display: flex;
   min-height: calc(100vh - 64px); /* Adjust 64px to match your navbar height */
-  /* padding: 20px; */
+  padding: 20px;
   gap: 20px;
   box-sizing: border-box;
-  background-color: #f0f4f8;
+  /* background-color: #f0f4f8; */
 }
 
 /* Sidebar */
-.sidebar {
+/* .sidebar {
  width: 280px;
   color: #86a1bb8b;
   padding: 10px;
@@ -27,7 +27,7 @@ body {
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
   margin-top: 20px;
   height: fit-content;
-}
+} */
 
 .sidebar ul {
   list-style: none;
@@ -47,13 +47,16 @@ body {
 
 /* Main content area */
 .userlist-background {
-    flex-grow: 1;
-  background-color: #86a1bb8b;
+  flex-grow: 1;
+  background: rgba(87, 128, 165, 0.25); /* More transparent */
   padding: 20px;
-  border-radius: 12px;
+  border-radius: 16px;
   margin-top: 20px;
   margin-left: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
 /* Page Title */

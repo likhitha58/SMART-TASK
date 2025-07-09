@@ -1,88 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Button, Container, Row, Col, Table } from 'react-bootstrap';
-import axios from 'axios';
+import { Container, Row, Col, Form, Button, Table, Spinner, Toast } from 'react-bootstrap';
 import { MdOutlineTaskAlt } from 'react-icons/md';
 import { HiPaperClip } from 'react-icons/hi';
+import { FaUsers, FaPlusCircle, FaStickyNote } from 'react-icons/fa';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FaUsers, FaPlusCircle } from 'react-icons/fa';
-import AppNavbar from '../../../components/Navbar.jsx';
-import Sidebar from '../../../components/Sidebar.jsx';
-import Footer from '../../../components/Footer.jsx';
-import '../../../styles/pages-css/TaskManagement/Tasks/EditTask.css';
 import DatePicker from 'react-datepicker';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import 'react-datepicker/dist/react-datepicker.css';
-import { jwtDecode } from 'jwt-decode';
-
-
-const subjectOptionsByDepartment = {
-  Development: ['Bug Fixing', 'Feature Development', 'Code Review'],
-  Deployment: ['Release Planning', 'Server Setup', 'Monitoring'],
-  Testing: ['Unit Testing', 'Integration Testing', 'Bug Reporting'],
-  HR: ['Onboarding', 'Payroll', 'Policy Review'],
-  Marketing: ['Campaign Planning', 'SEO Analysis', 'Content Creation'],
-  Sales: ['Client Outreach', 'Lead Generation', 'Follow-up'],
-};
-
-
+import AppNavbar from '../../../components/Navbar.jsx';
+import Footer from '../../../components/Footer';
+import Sidebar from '../../../components/Sidebar';
+import axiosInstance from '../../../api/axiosConfig';
 
 const EditTask = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
-  const [showUserOptions, setShowUserOptions] = useState(false);
-
-  const [showRecurrenceToast, setShowRecurrenceToast] = useState(false);
-  const [selectedRecurrence, setSelectedRecurrence] = useState('');
-  const [weekInterval, setWeekInterval] = useState(1);
-
-  const [departments, setDepartments] = useState([]);
-  const [projectIds, setProjectIds] = useState([]);
-  const [locations, setLocations] = useState([]);
-
-
-  const fetchDepartments = async () => {
-      try {
-        const res = await axios.get('http://localhost:5000/api/masters/departments');
-        setDepartments(res.data);
-      } catch (error) {
-        console.error('Error fetching departments:', error);
-      }
-    };
-  
-    const fetchProjectIds = async () => {
-      try {
-        const response = await axios.get('http://localhost:5000/api/masters/project-ids');
-  
-        // If your API returns: { data: [...] }
-        const projectData = response?.data?.data;
-  
-        if (Array.isArray(projectData)) {
-          setProjectIds(projectData);
-        } else {
-          console.warn("⚠️ projectIds response is not an array:", projectData);
-          setProjectIds([]);
-        }
-      } catch (error) {
-        console.error("❌ Error fetching project IDs:", error);
-        setProjectIds([]); // Prevents crash from .map
-      }
-    };
-  
-  
-  
-    const fetchLocations = async () => {
-      try {
-        const res = await axios.get('http://localhost:5000/api/masters/locations');
-        setLocations(res.data);
-      } catch (error) {
-        console.error('Error fetching locations:', error);
-      }
-    };
-
-
   const [formData, setFormData] = useState({
     title: '',
-    // description: '',
     department: '',
     subject: '',
     projectId: '',
@@ -91,353 +27,226 @@ const EditTask = () => {
     dueDate: '',
     endDate: '',
     recurrence: '',
+    weeklyInterval: 1,
     reminder: '',
+    notes: '',
+    newTaskOption: 0,
+    weeklyDays: [],
+    assignedUsers: [],
+    attachments: [],
     attachmentTitle: '',
     attachmentFile: null,
-    attachments: [],
-    assignedUsers: [],
-    notes: '',
-    newTaskOption: '',
-    recurrenceSummary: '',
-    weeklyDays: [], // ✅ Add this if it's missing
-    weeklyInterval: 1, // ✅ also initialize interval here
+    recurrenceSummary: ''
   });
 
-
-  const weekDaysList = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-
-  const toggleWeeklyDay = (day) => {
-    const updatedDays = formData.weeklyDays.includes(day)
-      ? formData.weeklyDays.filter(d => d !== day)
-      : [...formData.weeklyDays, day];
-
-    setFormData({ ...formData, weeklyDays: updatedDays });
-  };
+  const [users, setUsers] = useState([]);
+  const [existingAttachments, setExistingAttachments] = useState([]);
+  const [departments, setDepartments] = useState([]);
+  const [projectIds, setProjectIds] = useState([]);
+  const [locations, setLocations] = useState([]);
+const [showUserOptions, setShowUserOptions] = useState(false);
+const [showRecurrenceToast, setShowRecurrenceToast] = useState(false);
+const [selectedRecurrence, setSelectedRecurrence] = useState('');
 
 
-useEffect(() => {
-  const initializeForm = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const decoded = jwtDecode(token);
-      const userId = decoded.id;
-
-      const [
-        taskRes,
-        deptRes,
-        projRes,
-        locRes,
-        userRes
-      ] = await Promise.all([
-        axios.get(`http://localhost:5000/api/tasks/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        axios.get('http://localhost:5000/api/masters/departments'),
-        axios.get('http://localhost:5000/api/masters/project-ids'),
-        axios.get('http://localhost:5000/api/masters/locations'),
-        axios.get('http://localhost:5000/api/users'),
-      ]);
-
-      const task = taskRes.data;
-      if (Number(task.AssignedById) !== Number(userId)) {
-        alert('You are not authorized to edit this task.');
-        return navigate('/tasks');
+  // ✅ Fetch dropdown data
+  useEffect(() => {
+    const fetchMasters = async () => {
+      try {
+        const [deptRes, projRes, locRes, userRes] = await Promise.all([
+          axiosInstance.get('/masters/departments'),
+          axiosInstance.get('/masters/project-ids'),
+          axiosInstance.get('/masters/locations'),
+          axiosInstance.get('/users')
+        ]);
+        setDepartments(deptRes.data);
+        setProjectIds(projRes?.data?.data || []);
+        setLocations(locRes.data);
+        setUsers(userRes.data);
+      } catch (err) {
+        console.error('Error loading dropdowns', err);
       }
+    };
+    fetchMasters();
+  }, []);
 
-      setDepartments(deptRes.data);
-      setProjectIds(projRes.data?.data || []);
-      setLocations(locRes.data);
-      setUsers(userRes.data);
+  // ✅ Fetch task details by ID
+  useEffect(() => {
+    const fetchTask = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await axiosInstance.get(`http://localhost:5000/api/tasks/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
-      setFormData({
-        title: task.Title || '',
-        department: task.Department || '',
-        subject: task.Subject || '',
-        projectId: task.ProjectId || '',
-        location: task.Location || '',
-        priority: task.Priority || '',
-        dueDate: task.DueDate ? task.DueDate.split('T')[0] : '',
-        endDate: task.EndDate ? task.EndDate.split('T')[0] : '',
-        recurrence: task.Recurrence || '',
-        weeklyInterval: task.WeeklyInterval || 1,
-        reminder: task.Reminder || '',
-        attachments: task.Attachments || [],
-        attachmentTitle: '',
-        attachmentFile: '',
-        assignedUsers: task.AssignedUsers?.map(u => u.UserID) || [],
-        notes: task.Notes || '',
-        newTaskOption: String(task.NewTaskOption || ''),
-        recurrenceSummary: task.RecurrenceSummary || '',
-        weeklyDays: (() => {
-          try {
-            if (Array.isArray(task.WeeklyDays)) return task.WeeklyDays;
-            if (typeof task.WeeklyDays === 'string') return JSON.parse(task.WeeklyDays);
-            return [];
-          } catch (e) {
-            console.error('❌ Failed to parse WeeklyDays:', e);
-            return [];
-          }
-        })(),
-        monthlyInterval: task.MonthlyInterval || 1,
-        yearlyInterval: task.YearlyInterval || 1,
-      });
+        const task = res.data;
+        setFormData(prev => ({
+          ...prev,
+          title: task.Title,
+          department: task.Department,
+          subject: task.Subject,
+          projectId: task.ProjectID,
+          location: task.Location,
+          priority: task.Priority,
+          dueDate: task.DueDate?.split('T')[0],
+          endDate: task.EndDate?.split('T')[0],
+          recurrence: task.Recurrence,
+          weeklyInterval: task.WeeklyInterval || 1,
+          reminder: task.Reminder,
+          notes: task.Notes,
+          newTaskOption: task.NewTaskOption || 0,
+          weeklyDays: task.WeeklyDays ? task.WeeklyDays.split(',') : [],
+          assignedUsers: (task.AssignedUsers || []).map(u => u.UserID),
+          recurrenceSummary: task.RecurrenceSummary
+        }));
 
-      setSelectedRecurrence(task.Recurrence || '');
-      setShowRecurrenceToast(!!task.Recurrence);
+        setExistingAttachments(task.Attachments || []);
+      } catch (error) {
+        toast.error('Error fetching task');
+        console.error(error);
+      }
+    };
+    fetchTask();
+  }, [id]);
 
-    } catch (error) {
-      console.error('❌ Error during EditTask init:', error);
-    }
-  };
-
-  initializeForm();
-}, [id]);
-
-
-
-  const formattedDueDate = formData.dueDate ? new Date(formData.dueDate) : null;
-  const getRecurrenceMessage = (recurrence) => {
-    const formattedDueDate = formData.dueDate ? new Date(formData.dueDate) : null;
-
-    if (!recurrence) return '';
-    if (!formattedDueDate) return 'Please select a due date.';
-
-    switch (recurrence) {
-      case 'one-off':
-        return 'This is a one-time task.';
-      case 'Daily':
-        return 'Task will repeat daily.';
-      case 'Weekly':
-        return 'Task will repeat weekly.';
-      case 'Month by Date':
-        return `Repeating task every 1 month on ${formattedDueDate.getDate()}`;
-      case 'Month by Day':
-        return `Repeating task every 1 month on the ${formattedDueDate.toLocaleDateString('en-US', { weekday: 'long' })}`;
-      case 'Year by Date':
-        return `Repeating task every year on ${formattedDueDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`;
-      case 'Year by Day':
-        return `Repeating task every year on the ${formattedDueDate.toLocaleDateString('en-US', {
-          weekday: 'long',
-          month: 'long',
-          day: 'numeric',
-        })}`;
-      case 'Random Dates':
-        return 'Task will occur on randomly selected dates.';
-      default:
-        return 'Custom recurrence selected.';
-    }
-  };
-
-
-
+  // ✅ Handle form field changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    if (name === 'recurrence') {
-      setFormData((prev) => ({
-        ...prev,
-        recurrence: value,
-      }));
-      setSelectedRecurrence(value);
-      setShowRecurrenceToast(true);
-    } else if (name === 'department') {
-      setFormData((prev) => ({
-        ...prev,
-        department: value,
-        subject: '',
-      }));
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [name]: value,
-      }));
-    }
+    setFormData(prev => ({ ...prev, [name]: value }));
+     if (name === 'recurrence') {
+    setSelectedRecurrence(value);
+    setShowRecurrenceToast(true);
+  }
   };
 
-  const handlePriorityChange = (priority) => {
-    setFormData({ ...formData, priority });
-  };
-
-  const handleAssignUserToggle = (userId) => {
-    const alreadyAssigned = formData.assignedUsers.includes(userId);
-    const updatedUsers = alreadyAssigned
-      ? formData.assignedUsers.filter((id) => id !== userId)
+  const handleUserToggle = (userId) => {
+    const updated = formData.assignedUsers.includes(userId)
+      ? formData.assignedUsers.filter(id => id !== userId)
       : [...formData.assignedUsers, userId];
-    setFormData({ ...formData, assignedUsers: updatedUsers });
+    setFormData(prev => ({ ...prev, assignedUsers: updated }));
   };
+const handleAddAttachment = () => {
+  const { attachmentTitle, attachmentFile } = formData;
+  if (attachmentTitle && attachmentFile) {
+    const newAttachment = {
+      title: attachmentTitle,
+      file: attachmentFile,
+    };
+    setFormData(prev => ({
+      ...prev,
+      attachments: [...prev.attachments, newAttachment],
+      attachmentTitle: '',
+      attachmentFile: null,
+    }));
+  } else {
+    toast.warning('Please provide both a title and file.');
+  }
+};
+const handlePriorityChange = (priority) => {
+  setFormData(prev => ({ ...prev, priority }));
+};
+const handleAssignUserToggle = (userId) => {
+  const isAlreadyAssigned = formData.assignedUsers.includes(userId);
+  const updated = isAlreadyAssigned
+    ? formData.assignedUsers.filter(id => id !== userId)
+    : [...formData.assignedUsers, userId];
+  setFormData(prev => ({ ...prev, assignedUsers: updated }));
+};
+const handleRemoveAttachment = (attachmentId) => {
+  setExistingAttachments(prev => prev.filter(att => att.ID !== attachmentId));
+};
 
-  // const handleUpdate = (e) => {
-  //   e.preventDefault();
-  //   // Update task API call
-  //   console.log('Task updated:', formData);
-  //   navigate('/tasks');
-  // };
+const handleRemoveLocalAttachment = (index) => {
+  const updated = [...formData.attachments];
+  updated.splice(index, 1);
+  setFormData(prev => ({ ...prev, attachments: updated }));
+};
+const getRecurrenceMessage = (type) => {
+  switch (type) {
+    case 'Daily': return 'Task will repeat daily.';
+    case 'Random Dates': return 'Occurs on manually chosen random dates.';
+    default: return 'Custom recurrence selected.';
+  }
+};
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const getNextRecurrenceDate = (startDate, interval = 1, unit = 'month', mode = 'date') => {
+  if (!startDate) return 'N/A';
+  const start = new Date(startDate);
+  if (unit === 'month') {
+    start.setMonth(start.getMonth() + interval);
+  } else if (unit === 'year') {
+    start.setFullYear(start.getFullYear() + interval);
+  }
+  return start.toDateString();
+};
 
-    try {
-      const token = localStorage.getItem('token'); // ✅ Fetch the token
-
-      const updatedData = {
-        ...formData,
-        recurrenceSummary: generateRecurrenceSummary(),
-        newTaskOption: String(formData.newTaskOption || ''),
-      };
-
-      // ✅ Convert weeklyDays array to JSON string before sending
-      if (Array.isArray(updatedData.weeklyDays)) {
-        updatedData.weeklyDays = JSON.stringify(updatedData.weeklyDays);
-      }
-
-      // ❌ Optional: remove fields like 'attachments' if backend doesn't support them
-      delete updatedData.attachments;
-
-      await axios.put(`http://localhost:5000/api/tasks/${id}`, updatedData, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        },
-      }
-      );
-
-      alert('Task updated successfully!');
-      navigate('/tasks');
-    } catch (err) {
-      console.error('Error updating task:', err);
-      alert('Failed to update task. Please try again.');
-    }
-  };
-
-  const handleAddAttachment = () => {
+  const handleFileAttach = () => {
     const { attachmentTitle, attachmentFile } = formData;
     if (attachmentTitle && attachmentFile) {
       const newAttachment = {
         title: attachmentTitle,
         file: attachmentFile,
       };
-      setFormData({
-        ...formData,
-        attachments: [...formData.attachments, newAttachment],
+      setFormData(prev => ({
+        ...prev,
+        attachments: [...prev.attachments, newAttachment],
         attachmentTitle: '',
         attachmentFile: null,
-      });
-    } else {
-      alert('Please provide both a title and a file.');
-    }
-  };
-
-  // Remove attachment that was just added in this session
-  const handleRemoveLocalAttachment = (index) => {
-    const updatedAttachments = [...formData.attachments];
-    updatedAttachments.splice(index, 1);
-    setFormData({ ...formData, attachments: updatedAttachments });
-  };
-
-  // Remove already uploaded attachment from DB
-  const handleRemoveAttachment = async (attachmentId) => {
-    try {
-      await axios.delete(`http://localhost:5000/api/tasks/attachment/${attachmentId}`);
-      setFormData((prev) => ({
-        ...prev,
-        attachments: prev.attachments.filter((a) => a.ID !== attachmentId),
       }));
+    } else {
+      toast.warning('Provide both title and file');
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const token = localStorage.getItem('token');
+
+    const payload = new FormData();
+    payload.append('title', formData.title);
+    payload.append('department', formData.department);
+    payload.append('subject', formData.subject);
+    payload.append('projectId', formData.projectId);
+    payload.append('location', formData.location);
+    payload.append('priority', formData.priority);
+    payload.append('dueDate', formData.dueDate);
+    payload.append('endDate', formData.endDate);
+    payload.append('recurrence', formData.recurrence);
+    payload.append('weeklyInterval', formData.weeklyInterval);
+    payload.append('reminder', formData.reminder);
+    payload.append('notes', formData.notes);
+    payload.append('newTaskOption', formData.newTaskOption);
+    payload.append('recurrenceSummary', formData.recurrenceSummary);
+    payload.append('weeklyDays', JSON.stringify(formData.weeklyDays));
+
+    formData.assignedUsers.forEach(userId => payload.append("assignedUsers", userId));
+
+    formData.attachments.forEach(att => {
+      payload.append('attachments', att.file);
+      payload.append('attachmentTitles', att.title);
+    });
+
+    try {
+      await axiosInstance.put(`http://localhost:5000/api/tasks/${id}`, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+      toast.success('Task updated!');
+      navigate('/tasks');
     } catch (error) {
-      console.error('Error removing attachment:', error);
-      alert('Failed to remove attachment');
+      toast.error(error.response?.data?.message || 'Error updating task');
+      console.error('❌ Update Error:', error);
     }
   };
-
-
-  const getNextRecurrenceDate = (baseDateStr, interval, type, format = 'full') => {
-    const baseDate = baseDateStr ? new Date(baseDateStr) : new Date();
-    const nextDate = new Date(baseDate);
-
-    if (type === 'month') {
-      nextDate.setMonth(nextDate.getMonth() + interval);
-    } else if (type === 'year') {
-      nextDate.setFullYear(nextDate.getFullYear() + interval);
-    }
-
-    switch (format) {
-      case 'day':
-        return nextDate.toLocaleDateString('en-IN', {
-          weekday: 'long',
-          month: 'long',
-          ...(type === 'year' && { year: 'numeric' }) // include year only if yearly
-        });
-      case 'date':
-        return nextDate.toLocaleDateString('en-IN', {
-          day: 'numeric',
-          month: 'long',
-          ...(type === 'year' && { year: 'numeric' })
-        });
-      case 'date-month':
-        return nextDate.toLocaleDateString('en-IN', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric'
-        });
-      default:
-        return nextDate.toLocaleDateString('en-IN', {
-          weekday: 'long',
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric'
-        });
-    }
-  };
-
-  const generateRecurrenceSummary = () => {
-    const {
-      recurrence,
-      weeklyInterval,
-      weeklyDays,
-      monthlyInterval,
-      yearlyInterval,
-      dueDate
-    } = formData;
-
-    switch (recurrence) {
-      case 'Weekly': {
-        const validDays = Array.isArray(weeklyDays)
-          ? weeklyDays
-            .filter(day => typeof day === 'string' && day.trim() !== '' && day !== '[]')
-            .map(day => day.replace(/[\[\]"]/g, '').trim()) // cleanup accidental brackets/quotes
-          : [];
-
-
-        if (validDays.length === 0) return `Every ${weeklyInterval || 1} week${weeklyInterval > 1 ? 's' : ''}`;
-
-
-        return `Every ${weeklyInterval || 1} week${weeklyInterval > 1 ? 's' : ''} on ${validDays.join(', ')}`;
-      };
-      case 'Month by Date':
-        return `Every ${monthlyInterval || 1} month${monthlyInterval > 1 ? 's' : ''} on ${getNextRecurrenceDate(dueDate, monthlyInterval || 1, 'month', 'date')}`;
-      case 'Month by Day':
-        return `Every ${monthlyInterval || 1} month${monthlyInterval > 1 ? 's' : ''} on ${getNextRecurrenceDate(dueDate, monthlyInterval || 1, 'month', 'day')}`;
-      case 'Year by Date':
-        return `Every ${yearlyInterval || 1} year${yearlyInterval > 1 ? 's' : ''} on ${getNextRecurrenceDate(dueDate, yearlyInterval || 1, 'year', 'date')}`;
-      case 'Year by Day':
-        return `Every ${yearlyInterval || 1} year${yearlyInterval > 1 ? 's' : ''} on ${getNextRecurrenceDate(dueDate, yearlyInterval || 1, 'year', 'day')}`;
-      case 'Daily':
-        return 'Every day';
-      case 'Random Dates':
-        return 'Repeats on random dates';
-      case 'one-off':
-      default:
-        return 'One-time task';
-    }
-  };
-  console.log("🟩 Final weeklyDays in state:", formData.weeklyDays);
-
-
   return (
     <>
       <AppNavbar />
       <div className="addtask-container">
-        <div className="sidebar">
-          <Sidebar />
-        </div>
+        {/* <div className="sidebar"> */}
+        <Sidebar />
+        {/* </div> */}
         <div className="form-wrapper">
           <h2 style={{ textAlign: 'left', fontWeight: 600, color: '#2c3e50', fontSize: 28 }}>Edit Current Task</h2>
           <Container className="addtask-content">
@@ -468,22 +277,22 @@ useEffect(() => {
               <div className="mb-4 p-4 rounded" style={{ backgroundColor: '#f0f4f8' }}>
                 <Row className="mb-3">
                   <Col md={6}>
-                    <Form.Group>
+                    <Form.Group controlId="department">
                       <Form.Label>Department</Form.Label>
                       <Form.Select
                         name="department"
                         value={formData.department}
                         onChange={handleChange}
-                        required
                       >
-                        {/* <option value="">-- Select Department --</option> */}
-                        {(Array.isArray(departments) ? departments : []).map((dept) => (
-                          <option key={dept.ID} value={dept.ID}>
+                        <option value="">Select Department</option>
+                        {departments.map((dept) => (
+                          <option key={dept.ID} value={dept.DepartmentName}>
                             {dept.DepartmentName}
                           </option>
                         ))}
                       </Form.Select>
                     </Form.Group>
+
                   </Col>
                 </Row>
 
@@ -499,7 +308,7 @@ useEffect(() => {
                       >
                         {/* <option value="">-- Select Project ID --</option> */}
                         {(Array.isArray(projectIds) ? projectIds : []).map((proj) => (
-                          <option key={proj.ID} value={proj.ID}>
+                          <option key={proj.ID} value={proj.ProjectID}>
                             {proj.ProjectID} - {proj.PracticeArea}
                           </option>
                         ))}
@@ -517,7 +326,7 @@ useEffect(() => {
                       >
                         {/* <option value="">-- Select Location --</option> */}
                         {(Array.isArray(locations) ? locations : []).map((loc) => (
-                          <option key={loc.ID} value={loc.ID}>
+                          <option key={loc.ID} value={loc.LocationName}>
                             {loc.LocationName}
                           </option>
                         ))}
@@ -573,7 +382,7 @@ useEffect(() => {
                         onChange={(date) =>
                           setFormData((prev) => ({
                             ...prev,
-                            dueDate: date.toISOString().split('T')[0],
+                            dueDate: date,
                           }))
                         }
                         className="form-control"
@@ -592,7 +401,7 @@ useEffect(() => {
                         onChange={(date) =>
                           setFormData((prev) => ({
                             ...prev,
-                            endDate: date.toISOString().split('T')[0],
+                            endDate: date,
                           }))
                         }
                         className="form-control"
@@ -945,7 +754,7 @@ useEffect(() => {
               {/* === Container 5: Task Notes & Options === */}
               <div className="mb-4 p-4 rounded" style={{ backgroundColor: '#f4f9f9' }}>
                 <h5 style={{ fontWeight: 600, color: '#2c3e50' }}>
-                  <MdOutlineTaskAlt style={{ marginRight: '8px', fontSize: '1.3rem', verticalAlign: 'middle' }} />
+                  <FaStickyNote className="me-2" />
                   Task Notes & Options
                 </h5>
 
@@ -976,7 +785,7 @@ useEffect(() => {
                         label="After completing current task"
                         name="newTaskOption"
                         id="optionAfter"
-                        checked={formData.newTaskOption === 'after'}
+                        checked={formData.newTaskOption === 1}
                         onChange={() => setFormData({ ...formData, newTaskOption: 1 })}
                       />
                       <Form.Check
@@ -984,9 +793,10 @@ useEffect(() => {
                         label="As per task interval"
                         name="newTaskOption"
                         id="optionInterval"
-                        checked={formData.newTaskOption === 'interval'}
+                        checked={formData.newTaskOption === 2}
                         onChange={() => setFormData({ ...formData, newTaskOption: 2 })}
                       />
+
                     </div>
                   </Col>
                 </Row>

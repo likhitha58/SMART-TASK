@@ -1,95 +1,113 @@
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Dosis:wght@200..800&family=IBM+Plex+Mono:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&family=Inspiration&family=Italiana&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Playwrite+IN:wght@100..400&family=Poiret+One&family=Rubik:ital,wght@0,300..900;1,300..900&family=Sono:wght@200..800&display=swap');
+/* Import fonts (already in global styles assumed) */
 
-/* Root font */
-body {
-  font-family: 'Montserrat', sans-serif;
-}
-
-/* Main layout for sidebar + content */
-.addtask-container {
+/* Container wrapping whole page content (after Navbar) */
+.tasklist-container {
   display: flex;
-  min-height: calc(100vh - 64px);
-  gap: 20px;
-  box-sizing: border-box;
-  background-color: #f0f4f8;
+  flex-direction: row;
   padding: 20px;
+  gap:20px;
+  /* background-color: #f5f8fc; */
+  min-height: calc(100vh - 64px); /* assuming navbar height is 64px */
 }
 
-/* Sidebar */
-.sidebar {
-  width: 280px;
-  color: #86a1bb8b;
-  padding: 10px;
-  border-radius: 12px;
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
-  margin-top: 20px;
-  height: fit-content;
-  background-color: #ffffff;
-}
-
-/* Content wrapper */
-.form-wrapper {
+/* Main content wrapper (right of sidebar) */
+.tasklist-background {
   flex-grow: 1;
-  background-color: #86a1bb8b;
+  background: rgba(87, 128, 165, 0.25); /* More transparent */
   padding: 20px;
-  border-radius: 12px;
+  border-radius: 16px;
   margin-top: 20px;
   margin-left: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
 
-/* Page Title */
-h2 {
+/* Page title */
+.tasklist-title {
   font-size: 1.8rem;
   font-weight: 600;
   color: #2c3e50;
-  margin-bottom: 1rem;
 }
 
-/* Add Review Button */
-button.mb-3 {
-  font-size: 0.85rem;
-  padding: 6px 14px;
-  border-radius: 6px;
-  background-color: #0d6efd;
-  border: none;
+/* Add Task Button */
+.add-task-btn {
+  font-size: 0.95rem;
+  padding: 8px 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(13, 110, 253, 0.2);
+  transition: background-color 0.3s ease;
 }
 
-button.mb-3:hover {
+.add-task-btn:hover {
   background-color: #0b5ed7;
 }
 
-/* Table Styling */
-.table {
+/* Table */
+.tasklist-table {
   background-color: #ffffff;
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+  margin-top: 20px;
+  text-align: center;
 }
 
 /* Table Header */
-.table thead {
+.tasklist-table thead {
   background-color: #e8f0fe;
   color: #333;
   font-weight: 600;
-}
-
-/* Table Cells */
-.table td, .table th {
-  padding: 12px;
-  vertical-align: middle;
   font-size: 15px;
 }
 
-/* Optional highlight for overdue */
-.table td.overdue {
-  color: #dc3545;
-  font-weight: 600;
-  text-align: center;
+/* Table cells */
+.tasklist-table td,
+.tasklist-table th {
+  padding: 12px 16px;
+  font-size: 15px;
+  vertical-align: middle;
 }
 
-/* Center align S.No and Edit Button */
-.table td:first-child,
-.table td:last-child {
-  text-align: center;
+/* Button in cells */
+/* .tasklist-table .btn {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 6px;
+} */
+
+/* Text-muted message row */
+.tasklist-table .text-muted {
+  font-style: italic;
+  font-size: 14px;
+  padding: 20px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tasklist-container {
+    flex-direction: column;
+  }
+
+  .tasklist-background {
+    margin-left: 0;
+    margin-top: 20px;
+    padding: 20px;
+  }
+
+  .add-task-btn {
+    font-size: 0.85rem;
+    padding: 6px 12px;
+  }
+
+  .tasklist-title {
+    font-size: 1.5rem;
+  }
+
+  .tasklist-table td,
+  .tasklist-table th {
+    font-size: 14px;
+    padding: 10px;
+  }
 }

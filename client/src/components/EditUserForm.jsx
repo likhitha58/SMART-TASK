@@ -1,8 +1,8 @@
-
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import '../styles/components/EditUserForm.css';
-import { useNavigate, useParams } from 'react-router-dom';
 
 const EditUserForm = ({ initialData, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -21,7 +21,6 @@ const EditUserForm = ({ initialData, onSubmit, onCancel }) => {
 
   const [previewUrl, setPreviewUrl] = useState('');
   const [hasNewImage, setHasNewImage] = useState(false);
-
 
   useEffect(() => {
     if (initialData) {
@@ -52,7 +51,7 @@ const EditUserForm = ({ initialData, onSubmit, onCancel }) => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+      toast.error(' Passwords do not match!');
       return;
     }
 
@@ -69,12 +68,14 @@ const EditUserForm = ({ initialData, onSubmit, onCancel }) => {
       payload.append('photo', formData.photo);
     }
 
-    if (onSubmit) onSubmit(payload);  // <-- Pass payload to parent
+    if (onSubmit) {
+      onSubmit(payload);
+      toast.success(' User updated successfully!');
+    }
   };
 
   return (
     <Form onSubmit={handleSubmit} className="p-3">
-
       <Form.Group as={Row} className="mb-3" controlId="fullname">
         <Form.Label column sm={3}>Full Name</Form.Label>
         <Col sm={9}>
@@ -156,7 +157,6 @@ const EditUserForm = ({ initialData, onSubmit, onCancel }) => {
         </Col>
       </Form.Group>
 
-
       <Form.Group as={Row} className="mb-3" controlId="mobile">
         <Form.Label column sm={3}>Mobile Number</Form.Label>
         <Col sm={9}>
@@ -198,23 +198,6 @@ const EditUserForm = ({ initialData, onSubmit, onCancel }) => {
         </Col>
       </Form.Group>
 
-      {/* 
-      {formData.existingPhoto && (
-        <Form.Group as={Row} className="mb-3">
-          <Form.Label column sm={3}>Current Photo</Form.Label>
-          <Col sm={9}>
-            <img
-              src={`http://localhost:5000/${formData.existingPhoto}`}  // Ensure this path is correct from the server
-              alt="User"
-              style={{ maxWidth: '150px', borderRadius: '8px' }}
-            />
-          </Col>
-        </Form.Group>
-      )} */}
-
-
-
-      {/* Preview Image Block (ABOVE upload field) */}
       {previewUrl && (
         <Form.Group as={Row} className="mb-3">
           <Form.Label column sm={3}>Current Photo</Form.Label>
@@ -228,14 +211,13 @@ const EditUserForm = ({ initialData, onSubmit, onCancel }) => {
                 objectFit: 'cover',
                 borderRadius: '10px',
                 marginTop: '10px',
-                border: hasNewImage ? '2px solid #007bff' : '1px solid #ccc'
+                border: hasNewImage ? '2px solid #007bff' : '1px solid #ccc',
               }}
             />
           </Col>
         </Form.Group>
       )}
 
-      {/* File Upload Field */}
       <Form.Group as={Row} className="mb-3" controlId="photo">
         <Form.Label column sm={3}>Upload New Photo</Form.Label>
         <Col sm={9}>
@@ -247,8 +229,8 @@ const EditUserForm = ({ initialData, onSubmit, onCancel }) => {
               const file = e.target.files[0];
               if (file) {
                 setFormData({ ...formData, photo: file });
-                setPreviewUrl(URL.createObjectURL(file)); // live preview
-                setHasNewImage(true); // flag new image
+                setPreviewUrl(URL.createObjectURL(file));
+                setHasNewImage(true);
               }
             }}
           />
@@ -268,7 +250,5 @@ const EditUserForm = ({ initialData, onSubmit, onCancel }) => {
     </Form>
   );
 };
-
-
 
 export default EditUserForm;

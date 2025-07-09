@@ -69,7 +69,7 @@ function Sidebar() {
               <Nav.Link as={Link} to="/tasks" className="sidebar-sublink" style={{ fontWeight: 500 }}>
                 Tasks
               </Nav.Link>
-              <Nav.Link as={Link} to="/reviews" className="sidebar-sublink" style={{ fontWeight: 500 }}>
+              <Nav.Link as={Link} to="/review-list" className="sidebar-sublink" style={{ fontWeight: 500 }}>
                 Reviews
               </Nav.Link>
               <Nav.Link as={Link} to="/task-history" className="sidebar-sublink" style={{ fontWeight: 500 }}>
