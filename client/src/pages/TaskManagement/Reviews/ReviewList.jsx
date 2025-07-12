@@ -70,7 +70,7 @@ const ReviewList = () => {
                   <th>Priority</th>
                   <th>Department</th>
                   <th>Task</th>
-                  <th>Start Date</th>
+                  <th>Due Date</th>
                   <th>Assigned Since</th>
                   <th>Review</th>
                 </tr>
@@ -91,14 +91,14 @@ const ReviewList = () => {
                           </Button>
                         </div>
                       </td>
-                      <td>{task.DepartmentName || '—'}</td>
+                      <td>{task.Department || '—'}</td>
                       <td>{task.Title || '—'}</td>
                       <td>
                         <Button
                           variant="primary"
                           size="sm"
                           disabled
-                          title="Start Date"
+                          title="Due Date"
                           style={{
                             height: 30,
                             display: 'flex',

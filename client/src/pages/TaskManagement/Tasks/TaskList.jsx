@@ -122,10 +122,10 @@ const TaskList = () => {
                             </Button>
                           </div>
                         </td>
-                        <td>{task.DepartmentName || '—'}</td>
+                        <td>{task.Department || '—'}</td>
                         <td>{task.Title || '—'}</td>
                         <td>
-                          <Button variant="primary" size="sm" disabled title="Due Date" style={{height:30, display:'flex',alignItems:'center',justifyContent:'center'}}>
+                          <Button variant="primary" size="sm" disabled title="Due Date" style={{ height: 30, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                             {dueDateFormatted}
                           </Button>
                         </td>

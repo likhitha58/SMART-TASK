@@ -23,7 +23,7 @@ export const getOwnCreatedTasks = async (req, res) => {
           U.Photo AS CreatorPhoto
         FROM Tasks T
         LEFT JOIN Users U ON T.AssignedById = U.ID
-        LEFT JOIN Departments D ON T.Department = D.ID
+        LEFT JOIN Departments D ON T.Department = D.DepartmentName
         WHERE T.AssignedById = @UserID
           AND NOT EXISTS (
             SELECT 1 

@@ -149,7 +149,7 @@ const TaskHistoryList = () => {
                     <tr key={task.ID}>
                       <td>{index + 1}</td>
                       <td>{task.ProjectID}</td>
-                      <td>{task.DepartmentName}</td>
+                      <td>{task.Department}</td>
                       <td>{task.Title}</td>
                       <td>{new Date(task.CreatedAt).toLocaleDateString()}</td>
                       <td>{new Date(task.EndDate).toLocaleDateString()}</td>

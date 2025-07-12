@@ -10,6 +10,7 @@ import { FaStickyNote, FaPaperclip, FaUsers, FaHourglassHalf } from 'react-icons
 import defaultImage from '../../../assets/images/profileimage.jpg';
 import '../../../styles/pages-css/TaskManagement/Reviews/ViewReview.css';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const ViewReview = () => {
     const navigate = useNavigate();
@@ -46,7 +47,7 @@ const ViewReview = () => {
 
             } catch (err) {
                 console.error('❌ Failed to fetch review data:', err);
-                alert('Failed to load review data.');
+                toast.error('Failed to load review data.');
             }
         };
         fetchReviewData();
@@ -74,7 +75,7 @@ const ViewReview = () => {
 
     const handleSaveReview = async () => {
         const token = localStorage.getItem('token');
-        if (!token) return alert('Please login again.');
+        if (!token) return toast.warning('Please login again.');
 
         try {
             // 1️⃣ Upload attachments
@@ -110,11 +111,11 @@ const ViewReview = () => {
                 headers: { Authorization: `Bearer ${token}` }
             });
 
-            alert('✅ Review saved successfully.');
+            toast.success('✅ Review saved successfully.');
             navigate('/review-list');
         } catch (error) {
             console.error('❌ Review Save Error:', error);
-            alert('Something went wrong.');
+            toast.error('Something went wrong.');
         }
     };
 

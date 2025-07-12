@@ -92,7 +92,7 @@ export const updateTask = async (req, res) => {
       const request = pool.request();
       request.input('ID', sql.Int, id);
       request.input('Title', sql.NVarChar, title);
-      request.input('Department', sql.NVarChar, department || null);
+      request.input('Department', sql.NVarChar(100), department || null); // ✅
       request.input('Subject', sql.NVarChar, subject);
       request.input('ProjectID', sql.NVarChar, projectId);
       request.input('Location', sql.NVarChar, location);
@@ -218,7 +218,7 @@ export const addTask = async (req, res) => {
     }
 
     request.input('Title', sql.NVarChar, title);
-    request.input('Department', sql.NVarChar, department);
+    request.input('Department', sql.NVarChar(100), department || null); // ✅
     request.input('Subject', sql.NVarChar, subject);
     request.input('ProjectID', sql.NVarChar, projectId);
     request.input('Location', sql.NVarChar, location);
@@ -327,15 +327,16 @@ export const getTaskById = async (req, res) => {
     const creator = creatorResult.recordset[0];
 
     const enrichedTask = {
-      ...task,
-      IsCreator: isCreator,
-      IsAssignee: isAssignee,
-      CreatorName: creator?.FullName || "Unknown",
-      creatorPhoto: creator?.Photo || "",
-      AssignedUsers: assignedUserIds.map((uid) => ({ UserID: uid })),
-      Attachments: attachmentResult.recordset,
-      RecurrenceSummary: task.RecurrenceSummary,
-    };
+  ...task,
+  isCreator: isCreator,
+  isAssignee: isAssignee,
+  creatorName: creator?.FullName || "Unknown",
+  creatorPhoto: creator?.Photo || "",
+  assignedUsers: assignedUserIds.map((uid) => ({ UserID: uid })),
+  attachments: attachmentResult.recordset,
+  recurrenceSummary: task.RecurrenceSummary, // ✅ lowercase
+};
+
 
     res.status(200).json(enrichedTask);
   } catch (error) {
@@ -354,7 +355,6 @@ export const getAllTasks = async (req, res) => {
         T.ID,
         T.Title,
         T.Department,
-        D.DepartmentName,
         T.Subject,
         T.ProjectID,
         T.Location,
@@ -372,7 +372,6 @@ export const getAllTasks = async (req, res) => {
         T.AssignedById,
         T.Status
       FROM Tasks T
-      LEFT JOIN Departments D ON T.Department = D.ID
       WHERE T.Status = 0
     `);
 
@@ -382,6 +381,7 @@ export const getAllTasks = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 export const getUserTasks = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -394,7 +394,6 @@ export const getUserTasks = async (req, res) => {
           T.ID,
           T.Title,
           T.Department,
-          D.DepartmentName, -- ✅ Add this
           T.Subject,
           T.ProjectID,
           T.Location,
@@ -412,7 +411,6 @@ export const getUserTasks = async (req, res) => {
           T.AssignedById,
           T.Status
         FROM Tasks T
-        LEFT JOIN Departments D ON T.Department = D.ID -- ✅ JOIN with Departments
         LEFT JOIN TaskAssignments TA ON T.ID = TA.TaskID
         WHERE (T.AssignedById = @userId OR TA.UserID = @userId)
         AND T.Status = 0
@@ -424,6 +422,7 @@ export const getUserTasks = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+
 
 
 // Upload Attachment

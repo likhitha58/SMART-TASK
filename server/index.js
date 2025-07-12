@@ -16,6 +16,7 @@ import locationRoutes from './routes/masters/locationRoutes.js';
 import projectIdRoutes from './routes/masters/projectIdRoutes.js';
 import reviewRoutes from './routes/reviewRoutes.js';
 import taskHistoryRoutes from './routes/taskHistoryRoutes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
 import { poolPromise } from './config/db.js';
 dotenv.config();
 const app = express();
@@ -40,7 +41,7 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/masters/departments', departmentRoutes);
 app.use('/api/masters/locations', locationRoutes);
 app.use('/api/masters/project-ids', projectIdRoutes);
-
+app.use('/api/dashboard', dashboardRoutes);
 
 app.use('/api/reviews', reviewRoutes);
 // Optional base route

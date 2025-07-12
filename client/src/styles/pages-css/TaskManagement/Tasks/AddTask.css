@@ -3,7 +3,7 @@
   gap: 20px;
   min-height: calc(100vh - 64px); /* Adjust for Navbar height */
   padding: 20px;
-  background: rgba(134, 161, 187, 0.25); /* semi-transparent bluish */
+  background: rgba(134, 161, 187, 0.25);
   box-sizing: border-box;
   border-radius: 18px;
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.10);
@@ -17,7 +17,7 @@
 /* Form section */
 .form-wrapper {
   flex-grow: 1;
-  background-color: #86a1bb8b;
+  /* background-color: #86a1bb8b; */
   padding: 10px;
   border-radius: 12px;
   margin-top: 20px;

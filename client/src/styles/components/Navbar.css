@@ -9,6 +9,11 @@
   top: 0;
   border-radius:0px !important;
 }
+.custom-navbar img {
+  background-color: transparent;
+  mix-blend-mode: multiply; /* or 'darken' / 'screen' depending on logo */
+  border-radius: 50%;
+}
 
 /* Brand Title */
 .navbar-title {

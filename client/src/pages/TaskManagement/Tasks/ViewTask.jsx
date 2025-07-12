@@ -55,8 +55,8 @@ const ViewTask = () => {
                     Priority: data.Priority || '',
                 });
                 setNoteText(data.Notes || '');
-                setIsCreator(data.IsCreator);
-                setIsAssignee(data.IsAssignee);
+                setIsCreator(data.isCreator);
+                setIsAssignee(data.isAssignee);
             } catch (err) {
                 console.error('❌ Error fetching task:', err);
             }
@@ -255,7 +255,7 @@ const ViewTask = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {task.Attachments?.map((att, index) => (
+                                                {task.attachments?.map((att, index) => (
                                                     <tr key={index}>
                                                         <td>{att.Title}</td>
                                                         <td>{att.FileName}</td>

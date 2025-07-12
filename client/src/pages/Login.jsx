@@ -5,6 +5,7 @@ import { Navbar, Container, Form, Button } from 'react-bootstrap';
 import logo from '../assets/images/logoSmartTask.png';
 import sideImage from '../assets/images/loginSideImage.png';
 import '../styles/pages-css/Login.css';
+import { toast } from 'react-toastify';
 import { jwtDecode } from 'jwt-decode';
 
 const Login = () => {
@@ -35,14 +36,14 @@ const Login = () => {
           photo: decoded.photo, // filename or base64 string
         };
         localStorage.setItem('userInfo', JSON.stringify(userInfo));
-
+        toast.success('Login successful!');
         navigate('/');
       } else {
-        alert('Invalid credentials');
+        toast.error('Invalid credentials');
       }
     } catch (err) {
       console.error('Login failed:', err);
-      alert('Login error');
+      toast.error('Login error');
     }
   };
 

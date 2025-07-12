@@ -39,7 +39,7 @@ function AppNavbar() {
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto d-flex align-items-center">
               <Nav.Link as={Link} to="/dashboard">Dashboard</Nav.Link>
-              <Nav.Link onClick={toggleChat}>💬 Chat</Nav.Link>
+              {/* <Nav.Link onClick={toggleChat}>💬 Chat</Nav.Link> */}
               <Nav.Link as={Link} to="/login">Logout</Nav.Link>
             </Nav>
           </Navbar.Collapse>

@@ -83,8 +83,8 @@
 }
 
 .sidebar-sublink:hover {
-  color: #ffffff;
-  text-decoration: underline;
+  font-size:1.05rem;
+  text-decoration: none;
 }
 
 /* Hover zone (optional) */

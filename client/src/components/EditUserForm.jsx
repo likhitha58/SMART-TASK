@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import axios from 'axios';
 import '../styles/components/EditUserForm.css';
 
 const EditUserForm = ({ initialData, onSubmit, onCancel }) => {
+  const [departments, setDepartments] = useState([]);
+
   const [formData, setFormData] = useState({
     fullname: '',
     email: '',
@@ -23,6 +25,20 @@ const EditUserForm = ({ initialData, onSubmit, onCancel }) => {
   const [hasNewImage, setHasNewImage] = useState(false);
 
   useEffect(() => {
+    // Load departments
+    const fetchDepartments = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/masters/departments');
+        setDepartments(res.data);
+      } catch (err) {
+        console.error('Error fetching departments:', err);
+        toast.error('Failed to load departments');
+      }
+    };
+
+    fetchDepartments();
+
+    // Set initial form values
     if (initialData) {
       setFormData({
         fullname: initialData.fullname || '',
@@ -37,6 +53,7 @@ const EditUserForm = ({ initialData, onSubmit, onCancel }) => {
         photo: null,
         existingPhoto: initialData.photo || '',
       });
+
       if (initialData.photo) {
         setPreviewUrl(`http://localhost:5000/uploads/${initialData.photo}`);
       }
@@ -51,7 +68,7 @@ const EditUserForm = ({ initialData, onSubmit, onCancel }) => {
     e.preventDefault();
 
     if (formData.password !== formData.confirmPassword) {
-      toast.error(' Passwords do not match!');
+      toast.error('Passwords do not match!');
       return;
     }
 
@@ -70,12 +87,12 @@ const EditUserForm = ({ initialData, onSubmit, onCancel }) => {
 
     if (onSubmit) {
       onSubmit(payload);
-      toast.success(' User updated successfully!');
+      toast.success('User updated successfully!');
     }
   };
 
   return (
-    <Form onSubmit={handleSubmit} className="p-3">
+    <Form onSubmit={handleSubmit} encType="multipart/form-data" className="p-3">
       <Form.Group as={Row} className="mb-3" controlId="fullname">
         <Form.Label column sm={3}>Full Name</Form.Label>
         <Col sm={9}>
@@ -172,12 +189,19 @@ const EditUserForm = ({ initialData, onSubmit, onCancel }) => {
       <Form.Group as={Row} className="mb-3" controlId="department">
         <Form.Label column sm={3}>Department</Form.Label>
         <Col sm={9}>
-          <Form.Control
+          <Form.Select
             name="department"
             value={formData.department}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">-- Select Department --</option>
+            {departments.map((dept) => (
+              <option key={dept.ID} value={dept.DepartmentName}>
+                {dept.DepartmentName}
+              </option>
+            ))}
+          </Form.Select>
         </Col>
       </Form.Group>
 

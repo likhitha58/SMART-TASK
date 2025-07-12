@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 import '../styles/components/AddUserForm.css';
 import { toast } from 'react-toastify';
@@ -17,6 +17,21 @@ const AddUserForm = ({ onSubmit, onCancel }) => {
     confirmPassword: '',
     photo: null,
   });
+  const [departments, setDepartments] = useState([]);
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const res = await axios.get('http://localhost:5000/api/masters/departments');
+        setDepartments(res.data);
+      } catch (err) {
+        console.error('Error fetching departments:', err);
+        toast.error('Failed to load departments');
+      }
+    };
+
+    fetchDepartments();
+
+  }, []);
 
   const [previewUrl, setPreviewUrl] = useState(null);
 
@@ -162,14 +177,22 @@ const AddUserForm = ({ onSubmit, onCancel }) => {
       <Form.Group as={Row} className="mb-3" controlId="department">
         <Form.Label column sm={3}>Department</Form.Label>
         <Col sm={9}>
-          <Form.Control
+          <Form.Select
             name="department"
             value={formData.department}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="">-- Select Department --</option>
+            {departments.map((dept) => (
+              <option key={dept.ID} value={dept.DepartmentName}>
+                {dept.DepartmentName}
+              </option>
+            ))}
+          </Form.Select>
         </Col>
       </Form.Group>
+
 
       <Form.Group as={Row} className="mb-3" controlId="status">
         <Form.Label column sm={3}>Status</Form.Label>

@@ -2,19 +2,19 @@ import sql from 'mssql';
 import { config } from '../config/db.js';
 
 // 1️⃣ GET all completed tasks (status = 1)
+// getAllTaskHistory
 export const getAllTaskHistory = async (req, res) => {
   try {
     const pool = await sql.connect(config);
     const result = await pool.request().query(`
-  SELECT DISTINCT 
-    T.*, 
-    D.DepartmentName
-  FROM Tasks T
-  LEFT JOIN CurrentTask CT ON T.ID = CT.TaskID
-  LEFT JOIN Departments D ON T.Department = D.ID
-  WHERE T.Status = 1 OR CT.TaskStatus = 1
-  ORDER BY T.CreatedAt DESC
-`);
+      SELECT DISTINCT 
+        T.* 
+      FROM Tasks T
+      LEFT JOIN CurrentTask CT ON T.ID = CT.TaskID
+      -- No JOIN with Departments needed anymore
+      WHERE T.Status = 1 OR CT.TaskStatus = 1
+      ORDER BY T.CreatedAt DESC
+    `);
 
     res.json(result.recordset);
   } catch (err) {
@@ -23,22 +23,19 @@ export const getAllTaskHistory = async (req, res) => {
   }
 };
 
-
 // 2️⃣ FILTER completed tasks based on optional filters
+// filterTaskHistory
 export const filterTaskHistory = async (req, res) => {
   try {
     const { projectId, department, taskName, fromDate, toDate } = req.query;
 
     let query = `
-  SELECT DISTINCT 
-    T.*, 
-    D.DepartmentName 
-  FROM Tasks T
-  LEFT JOIN CurrentTask CT ON T.ID = CT.TaskID
-  LEFT JOIN Departments D ON T.Department = D.ShortName
-  WHERE (T.Status = 1 OR CT.TaskStatus = 1)
-`;
-
+      SELECT DISTINCT 
+        T.* 
+      FROM Tasks T
+      LEFT JOIN CurrentTask CT ON T.ID = CT.TaskID
+      WHERE (T.Status = 1 OR CT.TaskStatus = 1)
+    `;
 
     const conditions = [];
     const inputParams = [];
@@ -49,9 +46,8 @@ export const filterTaskHistory = async (req, res) => {
     }
 
     if (department) {
-      conditions.push('D.DepartmentName = @department');
+      conditions.push('T.Department = @department'); // Compare using short name now
       inputParams.push({ name: 'department', type: sql.VarChar, value: department });
-
     }
 
     if (taskName) {
