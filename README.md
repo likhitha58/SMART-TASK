@@ -115,11 +115,11 @@ Tasks are private: only the creator and assigned users can view or interact
 ---
 ###
 Frontend (client/)
-npm run dev         # Run frontend dev server
-npm run build       # Production build
+npm run dev         
+npm run build     
 
 Backend (server/)
-npm run dev         # Run backend with nodemon
+npm run dev         
 
 ---
 ## 📝 License
