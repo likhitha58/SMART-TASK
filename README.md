@@ -1,45 +1,45 @@
-# 💼 Smart Task – MERN + SQL Server Project
+#  Smart Task – MERN + SQL Server Project
 
 **Smart Task** is a comprehensive **task and meeting management system** built using the **MERN stack** (React, Node.js, Express) but with **SQL Server** as the database (instead of MongoDB).  
 It enables **secure task assignment, tracking, collaboration, file sharing, notes management**, and **Google Calendar & email integration** for better productivity.
 
 ---
 
-## 🚀 Key Features
+##  Key Features
 
-- 🔐 **JWT-based Admin Login** – Secure authentication and session handling
-- 📋 **Task Management** – Create, edit, and track tasks with recurrence options (daily / weekly / monthly)
-- 👥 **Multi-user Assignment** – Assign tasks to multiple employees
-- 📎 **Attachments & Notes** – Upload files and add notes to tasks
-- 📧 **Email Notifications** – Automated email alerts via Nodemailer
-- 📆 **Google Calendar Sync** – Schedule and track meetings/events directly
-- 🧑‍💼 **Master Data Management** – Manage Departments, Project IDs, Locations
-- 📸 **Profile Photos** – Support for user profile pictures
-- 🖥 **Role-Based Access** – 
+-  **JWT-based Admin Login** – Secure authentication and session handling
+-  **Task Management** – Create, edit, and track tasks with recurrence options (daily / weekly / monthly)
+-  **Multi-user Assignment** – Assign tasks to multiple employees
+-  **Attachments & Notes** – Upload files and add notes to tasks
+-  **Email Notifications** – Automated email alerts via Nodemailer
+-  **Google Calendar Sync** – Schedule and track meetings/events directly
+-  **Master Data Management** – Manage Departments, Project IDs, Locations
+-  **Profile Photos** – Support for user profile pictures
+-  **Role-Based Access** – 
   - Admin: Full CRUD on tasks & user management  
   - Assignees: Limited to adding notes/attachments  
   - Others: No access to unauthorized tasks
 
 ---
 
-## 📦 Tech Stack
+##  Tech Stack
 
 ### **Frontend**
-- ⚛️ React (with Vite for fast builds)
-- 🎨 React-Bootstrap for UI components
+-  React (with Vite for fast builds)
+-  React-Bootstrap for UI components
 - Axios for API calls
 
 ### **Backend**
-- 🟢 Node.js + Express
-- 🗄 SQL Server (using `mssql` Node.js package)
-- 🔐 JWT authentication
-- 📂 Multer (file uploads)
-- 📧 Nodemailer
-- 📅 Google Calendar API Integration
+-  Node.js + Express
+-  SQL Server (using `mssql` Node.js package)
+-  JWT authentication
+-  Multer (file uploads)
+-  Nodemailer
+-  Google Calendar API Integration
 
 ---
 
-## 🧑‍💻 Getting Started
+##  Getting Started
 
 ### **1. Prerequisites**
 - Node.js (v16+ recommended)
